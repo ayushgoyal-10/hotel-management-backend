@@ -95,4 +95,17 @@ public class BookingService {
         return null;
     }
 
+    public void deleteBooking(Long id) {
+        // This will find the booking or throw an error if not found
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + id));
+
+        // You might want to add logic here, e.g., only delete if not CHECKED_IN
+        if(!booking.getStatus().equals("CHECKED-IN")) {
+            bookingRepository.delete(booking);
+        }else{
+            throw new RuntimeException("Booking checked in cant be deleted");
+        }
+    }
+
 }

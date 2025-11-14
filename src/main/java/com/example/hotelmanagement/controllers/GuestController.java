@@ -54,4 +54,14 @@ public class GuestController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGuest(@PathVariable Long id) {
+        try {
+            guestService.deleteGuest(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

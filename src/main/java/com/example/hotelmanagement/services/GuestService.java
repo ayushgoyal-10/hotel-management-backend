@@ -41,4 +41,7 @@ public class GuestService {
     }
 
 
+    public void deleteGuest(Long id) {
+        guestRepository.deleteById(id);
+    }
 }

@@ -46,5 +46,8 @@ public class BookingRequest {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
     }
+    public BookingRequest(){
+
+    }
 
 }

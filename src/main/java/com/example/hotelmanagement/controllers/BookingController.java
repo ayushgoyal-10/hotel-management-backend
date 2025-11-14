@@ -45,4 +45,22 @@ public class BookingController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // In BookingController.java
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
+        try {
+            bookingService.deleteBooking(id);
+            return ResponseEntity.ok().build(); // 200 OK
+
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Booking checked in cant be deleted")) {
+                // Send a 400 Bad Request with the error message
+                return ResponseEntity.badRequest().build();
+            }
+            // Otherwise, it was a "Not found" error
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
