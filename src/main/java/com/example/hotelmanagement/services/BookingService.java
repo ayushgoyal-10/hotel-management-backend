@@ -57,21 +57,11 @@ public class BookingService {
     }
 
     public boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut) {
-        List<Booking> activeBookings = bookingRepository.findByRoomIdAndStatusNot(roomId, "CANCELLED");
-        for(Booking booking: activeBookings){
-            if(datesOverlap(booking.getCheckInDate(), booking.getCheckOutDate(), checkIn, checkOut)){
-                return false;
-            }
-        }
-        return true;
+        List<Booking> overlappingBookings = bookingRepository.findOverlappingBookings(roomId, checkIn, checkOut);
+
+        return overlappingBookings.isEmpty();
     }
 
-    private boolean datesOverlap(LocalDate start1, LocalDate end1, LocalDate start2, LocalDate end2) {
-        if(end1.isBefore(start2) || start1.isAfter(end2)){
-            return false;
-        }
-        return true;
-    }
 
     public Booking checkIn(Long bookingId){
         Optional<Booking> bookingOpt = bookingRepository.findById(bookingId);
@@ -97,10 +87,11 @@ public class BookingService {
 
     public void deleteBooking(Long id) {
         // This will find the booking or throw an error if not found
-        Booking booking = bookingRepository.findById(id)
+        Booking booking = bookingRepository
+                .findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found with id: " + id));
 
-        // You might want to add logic here, e.g., only delete if not CHECKED_IN
+
         if(!booking.getStatus().equals("CHECKED-IN")) {
             bookingRepository.delete(booking);
         }else{

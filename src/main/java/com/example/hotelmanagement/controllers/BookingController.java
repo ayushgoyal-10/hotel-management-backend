@@ -46,7 +46,6 @@ public class BookingController {
         }
     }
 
-    // In BookingController.java
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
