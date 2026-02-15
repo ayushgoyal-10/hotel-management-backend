@@ -1,5 +1,6 @@
 package com.example.hotelmanagement.controllers;
 
+import com.example.hotelmanagement.dto.RoomDto;
 import com.example.hotelmanagement.entities.Room;
 import com.example.hotelmanagement.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,40 +17,37 @@ public class RoomController {
     private RoomService roomService;
 
     @GetMapping
-    public List<Room> getAllRooms(){
+    public List<RoomDto> getAllRooms(){
         return roomService.getAllRooms();
     }
 
     @GetMapping("/available")
-    public List<Room> getAvailableRooms(){
+    public List<RoomDto> getAvailableRooms(){
         return roomService.getAvailableRooms();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Room> getRoomById(@PathVariable Long id){
-        Optional<Room> room= roomService.getRoomById(id);
-        if(room.isPresent()){
-            return ResponseEntity.ok(room.get());
-        }else{
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<RoomDto> getRoomById(@PathVariable Long id){
+        RoomDto roomById = roomService.getRoomById(id);
+        return ResponseEntity.ok(roomById);
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Room> updateRoomStatus(
+    public ResponseEntity<RoomDto> updateRoomStatus(
             @PathVariable Long id,
             @RequestParam String status){
-        Room updateRoom = roomService.updateRoomStatus(id, status);
-        return updateRoom!=null ? ResponseEntity.ok(updateRoom): ResponseEntity.notFound().build();
+        RoomDto roomDto = roomService.updateRoomStatus(id, status);
+        return ResponseEntity.ok(roomDto);
     }
 
     @PostMapping
-    public Room createRoom(@RequestBody Room room){
-        return roomService.createRoom(room);
+    public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto){
+        RoomDto room = roomService.createRoom(roomDto);
+        return ResponseEntity.ok(room);
     }
 
     @GetMapping("type/{roomType}")
-    public List<Room> getRoomsByType(@PathVariable String roomType){
+    public List<RoomDto> getRoomsByType(@PathVariable String roomType){
         return roomService.getRoomsByType(roomType);
     }
 

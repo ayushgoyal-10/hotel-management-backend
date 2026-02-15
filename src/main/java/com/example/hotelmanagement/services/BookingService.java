@@ -86,7 +86,7 @@ public class BookingService {
     }
 
     public void deleteBooking(Long id) {
-        // This will find the booking or throw an error if not found
+
         Booking booking = bookingRepository
                 .findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found with id: " + id));

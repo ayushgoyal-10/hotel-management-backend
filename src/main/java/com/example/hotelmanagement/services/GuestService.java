@@ -1,43 +1,55 @@
 package com.example.hotelmanagement.services;
 
+import com.example.hotelmanagement.dto.GuestDto;
 import com.example.hotelmanagement.entities.Guest;
 import com.example.hotelmanagement.repositories.GuestRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class GuestService {
-    @Autowired
+    private ModelMapper modelMapper;
     private GuestRepository guestRepository;
 
-    public List<Guest> getAllGuests(){
-        return guestRepository.findAll();
+    public GuestService(GuestRepository guestRepository, ModelMapper modelMapper) {
+        this.guestRepository = guestRepository;
+        this.modelMapper = modelMapper;
     }
 
-    public Optional<Guest> getGuestById(Long id){
-        return guestRepository.findById(id);
+    public List<GuestDto> getAllGuests(){
+        List<GuestDto> guestDtos = guestRepository.findAll()
+                .stream()
+                .map(guest -> modelMapper.map(guest, GuestDto.class)).toList();
+
+        return guestDtos;
     }
 
-    public Guest createGuest(Guest guest){
-        return guestRepository.save(guest);
+    public GuestDto getGuestById(Long id){
+        Guest guest = guestRepository.findById(id).orElseThrow(() -> new RuntimeException("Guest not found"));
+        return modelMapper.map(guest, GuestDto.class);
     }
 
-    public Optional<Guest> findGuestByEmail(String email){
-        return guestRepository.findByEmail(email);
+    public GuestDto createGuest(GuestDto guestDto){
+        Guest guest = modelMapper.map(guestDto, Guest.class);
+        Guest saved = guestRepository.save(guest);
+        return modelMapper.map(saved, GuestDto.class);
     }
 
-    public Guest updateGuest(Long id, Guest guestDetails){
-        Optional<Guest> guestOpt = guestRepository.findById(id);
-        if(guestOpt.isPresent()){
-            Guest guest= guestOpt.get();
-            guest.setFirstName(guestDetails.getFirstName());
-            guest.setLastName(guestDetails.getLastName());
-            guest.setPhone(guestDetails.getPhone());
-            return guestRepository.save(guest);
-        }
-        return null;
+    public GuestDto findGuestByEmail(String email){
+        Guest guest = guestRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Guest not found"));
+        return modelMapper.map(guest, GuestDto.class);
+    }
+
+    public GuestDto updateGuest(Long id, GuestDto guestDetails){
+        Guest guest = guestRepository.findById(id).orElseThrow(() -> new RuntimeException("Guest not found"));
+        guest.setFirstName(guestDetails.getFirstName());
+        guest.setLastName(guestDetails.getLastName());
+        guest.setPhone(guestDetails.getPhone());
+        Guest saved = guestRepository.save(guest);
+
+        return modelMapper.map(saved, GuestDto.class);
     }
 
 

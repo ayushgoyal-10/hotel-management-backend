@@ -1,8 +1,10 @@
 package com.example.hotelmanagement.controllers;
 
+import com.example.hotelmanagement.dto.GuestDto;
 import com.example.hotelmanagement.entities.Guest;
 import com.example.hotelmanagement.services.GuestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,43 +18,32 @@ public class GuestController {
     private GuestService guestService;
 
     @GetMapping
-    public List<Guest> getAllGuests(){
+    public List<GuestDto> getAllGuests(){
         return guestService.getAllGuests();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Guest> getGuestById(@PathVariable Long id){
-        Optional<Guest> guestById = guestService.getGuestById(id);
-        if(guestById.isPresent()){
-            return ResponseEntity.ok(guestById.get());
-        }else{
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<GuestDto> getGuestById(@PathVariable Long id){
+        GuestDto guestById = guestService.getGuestById(id);
+        return ResponseEntity.ok(guestById);
     }
 
     @PostMapping
-    public Guest createGuest(@RequestBody Guest guest){
-        return guestService.createGuest(guest);
+    public ResponseEntity<GuestDto> createGuest(@RequestBody GuestDto guestDto){
+        GuestDto guest = guestService.createGuest(guestDto);
+        return ResponseEntity.ok(guest);
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<Guest> getGuestByEmail(@PathVariable String email){
-        Optional<Guest> guestByEmail = guestService.findGuestByEmail(email);
-        if(guestByEmail.isPresent()){
-            return ResponseEntity.ok(guestByEmail.get());
-        }else{
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<GuestDto> getGuestByEmail(@PathVariable String email){
+        GuestDto guestByEmail = guestService.findGuestByEmail(email);
+        return ResponseEntity.ok(guestByEmail);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Guest> updateGuestById(@PathVariable Long id, @RequestBody Guest guestDetails){
-        Guest guest = guestService.updateGuest(id, guestDetails);
-        if(guest!=null){
-            return ResponseEntity.ok(guest);
-        }else{
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<GuestDto> updateGuestById(@PathVariable Long id, @RequestBody GuestDto guestDetails){
+        GuestDto guestDto = guestService.updateGuest(id, guestDetails);
+        return ResponseEntity.ok(guestDto);
     }
 
     @DeleteMapping("/{id}")
