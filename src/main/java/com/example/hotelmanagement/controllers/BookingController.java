@@ -3,6 +3,7 @@ package com.example.hotelmanagement.controllers;
 import com.example.hotelmanagement.dto.BookingRequest;
 import com.example.hotelmanagement.entities.Booking;
 import com.example.hotelmanagement.services.BookingService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public Booking createBooking(@RequestBody BookingRequest request){
+    public Booking createBooking(@Valid @RequestBody BookingRequest request){
         return bookingService.createBooking(request);
     }
 

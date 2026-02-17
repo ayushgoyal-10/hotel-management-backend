@@ -2,6 +2,7 @@ package com.example.hotelmanagement.services;
 
 import com.example.hotelmanagement.dto.RoomDto;
 import com.example.hotelmanagement.entities.Room;
+import com.example.hotelmanagement.exception.ResourceNotFoundException;
 import com.example.hotelmanagement.repositories.RoomRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,12 @@ public class RoomService {
     }
 
     public RoomDto getRoomById(Long id){
-        Room room = roomRepository.findById(id).orElseThrow(() -> new RuntimeException("Room not found"));
+        Room room = roomRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Room not found"));
         return modelMapper.map(room, RoomDto.class);
     }
 
     public RoomDto updateRoomStatus(Long id, String newStatus) {
-        Room room = roomRepository.findById(id).orElseThrow(() -> new RuntimeException("Room not found"));
+        Room room = roomRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Room not found"));
         room.setStatus(newStatus);
         Room saved = roomRepository.save(room);
         return modelMapper.map(room, RoomDto.class);

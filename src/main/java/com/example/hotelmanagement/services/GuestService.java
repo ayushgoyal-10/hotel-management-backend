@@ -2,6 +2,7 @@ package com.example.hotelmanagement.services;
 
 import com.example.hotelmanagement.dto.GuestDto;
 import com.example.hotelmanagement.entities.Guest;
+import com.example.hotelmanagement.exception.ResourceNotFoundException;
 import com.example.hotelmanagement.repositories.GuestRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class GuestService {
     }
 
     public GuestDto getGuestById(Long id){
-        Guest guest = guestRepository.findById(id).orElseThrow(() -> new RuntimeException("Guest not found"));
+        Guest guest = guestRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Guest not found"));
         return modelMapper.map(guest, GuestDto.class);
     }
 
@@ -38,12 +39,12 @@ public class GuestService {
     }
 
     public GuestDto findGuestByEmail(String email){
-        Guest guest = guestRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Guest not found"));
+        Guest guest = guestRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Guest not found"));
         return modelMapper.map(guest, GuestDto.class);
     }
 
     public GuestDto updateGuest(Long id, GuestDto guestDetails){
-        Guest guest = guestRepository.findById(id).orElseThrow(() -> new RuntimeException("Guest not found"));
+        Guest guest = guestRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Guest not found"));
         guest.setFirstName(guestDetails.getFirstName());
         guest.setLastName(guestDetails.getLastName());
         guest.setPhone(guestDetails.getPhone());
@@ -54,6 +55,7 @@ public class GuestService {
 
 
     public void deleteGuest(Long id) {
-        guestRepository.deleteById(id);
+        Guest guest = guestRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Guest not found"));
+        guestRepository.delete(guest);
     }
 }

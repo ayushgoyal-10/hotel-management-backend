@@ -4,6 +4,7 @@ import com.example.hotelmanagement.dto.BookingRequest;
 import com.example.hotelmanagement.entities.Booking;
 import com.example.hotelmanagement.entities.Guest;
 import com.example.hotelmanagement.entities.Room;
+import com.example.hotelmanagement.exception.ResourceNotFoundException;
 import com.example.hotelmanagement.repositories.BookingRepository;
 import com.example.hotelmanagement.repositories.GuestRepository;
 import com.example.hotelmanagement.repositories.RoomRepository;
@@ -89,7 +90,7 @@ public class BookingService {
 
         Booking booking = bookingRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + id));
 
 
         if(!booking.getStatus().equals("CHECKED-IN")) {
