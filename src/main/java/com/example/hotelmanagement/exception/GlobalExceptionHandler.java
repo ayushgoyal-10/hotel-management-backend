@@ -3,6 +3,7 @@ package com.example.hotelmanagement.exception;
 import com.example.hotelmanagement.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,8 +38,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException e){
-        ErrorResponse errorResponse= ErrorResponse.builder()
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
                 .message(e.getMessage())
                 .status(HttpStatus.NOT_FOUND.value())
                 .timestamp(LocalDateTime.now())
@@ -46,4 +47,5 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
 }

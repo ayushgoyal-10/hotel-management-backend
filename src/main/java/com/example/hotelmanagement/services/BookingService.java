@@ -34,17 +34,17 @@ public class BookingService {
         // 1. finding the guest
         Optional<Guest> guest = guestRepository.findById(request.getGuestId());
         if(guest.isEmpty()){
-            throw new RuntimeException("Guest not found");
+            throw new ResourceNotFoundException("Guest not found");
         }
         // 2. finding the room
         Optional<Room> room = roomRepository.findById(request.getRoomId());
         if(room.isEmpty()){
-            throw new RuntimeException("Room not found");
+            throw new ResourceNotFoundException("Room not found");
         }
 
         // 3. checking the availability of room
         if (!isRoomAvailable(request.getRoomId(), request.getCheckInDate(), request.getCheckOutDate())) {
-            throw new RuntimeException("Room not available for these dates");
+            throw new ResourceNotFoundException("Room not available for these dates");
         }
 
         // 4. creating and saving the booking
